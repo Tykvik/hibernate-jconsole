@@ -48,21 +48,24 @@ public final class ClasspathUtil {
 	}
 
 	public static void addURLs(List<URL> urls) {
-		URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-		try {
-			for (URL url : urls) {
-				addURL.invoke(sysloader, url);
+		ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+		if (systemClassLoader instanceof URLClassLoader) {
+			URLClassLoader sysloader = (URLClassLoader) systemClassLoader;
+			try {
+				for (URL url : urls) {
+					addURL.invoke(sysloader, url);
 
-				// Reconstruct classpath property
-				if ("file".equals(url.getProtocol())) {
-					String cp = System.getProperty("java.class.path", "");
-					System.setProperty("java.class.path",
-							("".equals(cp) ? cp : cp + File.pathSeparatorChar) +
-									new File(url.toURI()).getCanonicalPath());
+					// Reconstruct classpath property
+					if ("file".equals(url.getProtocol())) {
+						String cp = System.getProperty("java.class.path", "");
+						System.setProperty("java.class.path",
+								("".equals(cp) ? cp : cp + File.pathSeparatorChar) +
+										new File(url.toURI()).getCanonicalPath());
+					}
 				}
+			} catch (Throwable t) {
+				throw new RuntimeException("Error, could not add URL to system classloader", t);
 			}
-		} catch (Throwable t) {
-			throw new RuntimeException("Error, could not add URL to system classloader", t);
 		}
 	}
 

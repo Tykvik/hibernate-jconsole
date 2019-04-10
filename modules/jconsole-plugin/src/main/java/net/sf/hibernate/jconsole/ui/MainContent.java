@@ -45,6 +45,7 @@ public class MainContent extends RefreshableJPanel {
 		loadChart.setBorder(new EmptyBorder(4, 4, 4, 4));
 		loadChart.setPreferredSize(new Dimension(400, 130));
 
+		tabs.add(CommonStatisticTab.NAME, new CommonStatisticTab());
 		tabs.add(QueriesTab.NAME, new QueriesTab());
 		tabs.add(CollectionsTab.NAME, new CollectionsTab());
 		tabs.add(EntitiesTab.NAME, new EntitiesTab());
