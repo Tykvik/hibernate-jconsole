@@ -24,15 +24,15 @@ import net.sf.hibernate.jconsole.ui.MainTab;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.management.MBeanServerConnection;
 import javax.swing.*;
+import java.beans.PropertyChangeListener;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Smoke tests the console initialization and refresh operation.
@@ -41,14 +41,33 @@ import static org.mockito.Mockito.when;
  */
 public class HibernateJConsolePluginTest {
 
-	JConsoleContext context = mock(JConsoleContext.class);
+	JConsoleContext context = new JConsoleContext() {
+		@Override
+		public MBeanServerConnection getMBeanServerConnection() {
+			return ManagementFactory.getPlatformMBeanServer();
+		}
+
+		@Override
+		public ConnectionState getConnectionState() {
+			return JConsoleContext.ConnectionState.CONNECTED;
+		}
+
+		@Override
+		public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+
+		}
+
+		@Override
+		public void removePropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+
+		}
+	};
+
 	HibernateJConsolePlugin plugin = new HibernateJConsolePlugin();
 
 	@Before
 	public void setUp() throws Exception {
 		plugin.setContext(context);
-		when(context.getConnectionState()).thenReturn(JConsoleContext.ConnectionState.CONNECTED);
-		when(context.getMBeanServerConnection()).thenReturn(ManagementFactory.getPlatformMBeanServer());
 	}
 
 	@Test

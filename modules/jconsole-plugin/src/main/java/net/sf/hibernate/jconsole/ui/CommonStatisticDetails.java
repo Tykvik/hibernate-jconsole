@@ -3,6 +3,8 @@ package net.sf.hibernate.jconsole.ui;
 import net.sf.hibernate.jconsole.AbstractStatisticsContext;
 import net.sf.hibernate.jconsole.util.DataTable;
 
+import javax.swing.event.ListSelectionEvent;
+
 /**
  * Implements the details panel below some statistic attributes.
  *
@@ -18,6 +20,13 @@ public class CommonStatisticDetails extends AbstractChartViewDetails<String> {
      */
     public CommonStatisticDetails(CommonStatisticTable table) {
         super(table);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
     }
 
     /**
